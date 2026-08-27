@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+Alertas da Defesa Civil — Anatel
+</title>
+
+<script
+src="https://cdn.plot.ly/plotly-2.35.2.min.js">
+</script>
+
+<link
+rel="stylesheet"
+href="assets/style.css"
+>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+    <div>
+
+        <div class="header-kicker">
+            PAINEL DE DADOS
+        </div>
+
+        <h1>
+            Alertas da Defesa Civil
+        </h1>
+
+        <p>
+            Distribuição temporal, territorial e perfil dos alertas
+            disponibilizados pela Anatel
+        </p>
+
+    </div>
+
+
+    <div
+        id="periodo-base"
+        class="period-badge">
+
+        Carregando...
+
+    </div>
+
+</header>
+
+
+<nav class="tabs">
+
+    <button
+        class="tab active"
+        data-tab="geral">
+
+        Visão Geral
+
+    </button>
+
+
+    <button
+        class="tab"
+        data-tab="informacoes">
+
+        Informações
+
+    </button>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- ===================================================================== -->
+<!-- VISÃO GERAL -->
+<!-- ===================================================================== -->
+
+<section
+id="tab-geral"
+class="tab-content active">
+
+
+<!-- ===================================================================== -->
+<!-- FILTROS -->
+<!-- ===================================================================== -->
+
+<section class="panel filters">
+
+    <div class="filters-grid">
+
+
+        <div class="control control-tipo">
+
+            <label>
+                Tipo de desastre
+            </label>
+
+            <select id="tipo">
+            </select>
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Forma de envio
+            </label>
+
+            <select id="forma">
+            </select>
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Abrangência
+            </label>
+
+            <select id="abrangencia">
+
+                <option value="municipios">
+                    Municípios
+                </option>
+
+                <option value="ufs">
+                    UFs
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                UF
+            </label>
+
+            <select id="uf">
+
+                <option value="BR">
+                    Brasil
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="control control-metrica">
+
+            <label>
+                Métrica do mapa
+            </label>
+
+            <select id="metrica">
+            </select>
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Classificação
+            </label>
+
+            <select id="classificacao">
+
+                <option value="quantis">
+                    Quantis
+                </option>
+
+                <option value="fixa">
+                    Escala fixa
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Ano
+            </label>
+
+            <select id="ano">
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="animation-row">
+
+        <button
+            id="prev"
+            class="animation-button">
+
+            ◀
+
+        </button>
+
+
+        <button
+            id="play"
+            class="play-button">
+
+            ▶ Reproduzir
+
+        </button>
+
+
+        <button
+            id="next"
+            class="animation-button">
+
+            ▶
+
+        </button>
+
+
+        <input
+            id="slider"
+            type="range"
+            step="1"
+        >
+
+
+        <strong id="slider-label">
+            —
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================================== -->
+<!-- CONTEXTO -->
+<!-- ===================================================================== -->
+
+<div class="context-bar">
+
+    <div>
+
+        Recorte territorial:
+
+        <strong id="context-region">
+            Brasil — municípios
+        </strong>
+
+
+        <span
+            id="context-municipio-wrap"
+            class="hidden">
+
+            &nbsp;›&nbsp;
+
+            <strong id="context-municipio">
+            </strong>
+
+        </span>
+
+    </div>
+
+
+    <button
+        id="clear-municipio"
+        class="secondary-button hidden">
+
+        Limpar município
+
+    </button>
+
+</div>
+
+
+<!-- ===================================================================== -->
+<!-- CARDS -->
+<!-- ===================================================================== -->
+
+<section class="cards">
+
+
+    <article class="metric-card">
+
+        <div class="metric-label">
+            Alertas
+        </div>
+
+        <div
+            id="card-alertas"
+            class="metric-value">
+
+            —
+
+        </div>
+
+        <div
+            id="card-alertas-sub"
+            class="metric-sub">
+        </div>
+
+    </article>
+
+
+    <article class="metric-card">
+
+        <div class="metric-label">
+            Municípios abrangidos
+        </div>
+
+        <div
+            id="card-municipios"
+            class="metric-value">
+
+            —
+
+        </div>
+
+        <div
+            id="card-municipios-sub"
+            class="metric-sub">
+        </div>
+
+    </article>
+
+
+    <article class="metric-card">
+
+        <div class="metric-label">
+            Cobertura municipal
+        </div>
+
+        <div
+            id="card-cobertura"
+            class="metric-value">
+
+            —
+
+        </div>
+
+        <div
+            id="card-cobertura-sub"
+            class="metric-sub">
+        </div>
+
+    </article>
+
+
+    <article class="metric-card">
+
+        <div
+            id="card-territorio-label"
+            class="metric-label">
+
+            UFs abrangidas
+
+        </div>
+
+        <div
+            id="card-territorio"
+            class="metric-value">
+
+            —
+
+        </div>
+
+        <div
+            id="card-territorio-sub"
+            class="metric-sub">
+        </div>
+
+    </article>
+
+
+    <article class="metric-card">
+
+        <div
+            id="card-top-label"
+            class="metric-label">
+
+            Município com mais alertas
+
+        </div>
+
+        <div
+            id="card-top"
+            class="metric-value metric-text">
+
+            —
+
+        </div>
+
+        <div
+            id="card-top-sub"
+            class="metric-sub">
+        </div>
+
+    </article>
+
+
+    <article class="metric-card">
+
+        <div class="metric-label">
+            Variação temporal
+        </div>
+
+        <div
+            id="card-variacao"
+            class="metric-value">
+
+            —
+
+        </div>
+
+        <div
+            id="card-variacao-sub"
+            class="metric-sub">
+        </div>
+
+    </article>
+
+</section>
+
+
+<!-- ===================================================================== -->
+<!-- MAPA + LATERAL -->
+<!-- ===================================================================== -->
+
+<section class="main-grid">
+
+
+    <article class="panel map-panel">
+
+        <div
+            id="map-loading"
+            class="map-loading hidden">
+
+            Carregando território...
+
+        </div>
+
+
+        <div id="mapa">
+        </div>
+
+
+        <div
+            id="map-note"
+            class="note">
+        </div>
+
+    </article>
+
+
+    <aside class="panel sidebar">
+
+
+        <div class="sidebar-tabs">
+
+            <button
+                class="side-tab active"
+                data-side="perfil">
+
+                Perfil
+
+            </button>
+
+
+            <button
+                class="side-tab"
+                data-side="ranking">
+
+                Ranking
+
+            </button>
+
+        </div>
+
+
+        <!-- ============================================================= -->
+        <!-- PERFIL -->
+        <!-- ============================================================= -->
+
+        <div id="side-perfil">
+
+
+            <div class="sidebar-heading">
+
+                <div class="section-kicker">
+                    PERFIL DOS ALERTAS
+                </div>
+
+                <div
+                    id="profile-scope"
+                    class="profile-scope">
+                </div>
+
+            </div>
+
+
+            <div
+                id="profile-loading"
+                class="profile-loading hidden">
+
+                Carregando perfil municipal...
+
+            </div>
+
+
+            <div class="donut-grid">
+
+
+                <div class="mini-chart-wrap">
+
+                    <div id="pie-severidade">
+                    </div>
+
+                </div>
+
+
+                <div class="mini-chart-wrap">
+
+                    <div id="pie-urgencia">
+                    </div>
+
+                </div>
+
+
+                <div class="mini-chart-wrap">
+
+                    <div id="pie-probabilidade">
+                    </div>
+
+                </div>
+
+
+                <div class="mini-chart-wrap">
+
+                    <div id="pie-periodo">
+                    </div>
+
+                    <div
+                        id="pie-periodo-note"
+                        class="mini-note">
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="profile-section">
+
+                <div id="bar-acao">
+                </div>
+
+            </div>
+
+
+            <div class="profile-section types-section">
+
+                <div id="bar-tipos">
+                </div>
+
+                <div class="mini-note">
+                    Distribuição de todos os tipos no recorte atual;
+                    respeita ano, forma e território.
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ============================================================= -->
+        <!-- RANKING -->
+        <!-- ============================================================= -->
+
+        <div
+            id="side-ranking"
+            class="hidden">
+
+
+            <div class="sidebar-heading">
+
+                <div class="section-kicker">
+                    ABRANGÊNCIA TERRITORIAL
+                </div>
+
+                <h2 id="ranking-title">
+                    Ranking
+                </h2>
+
+                <div
+                    id="ranking-subtitle"
+                    class="ranking-subtitle">
+                </div>
+
+            </div>
+
+
+            <div
+                id="ranking"
+                class="ranking-container">
+            </div>
+
+
+        </div>
+
+
+    </aside>
+
+
+</section>
+
+
+<!-- ===================================================================== -->
+<!-- EVOLUÇÃO -->
+<!-- ===================================================================== -->
+
+<section class="panel line-panel">
+
+
+    <div class="line-header">
+
+        <div>
+
+            <div class="section-kicker">
+                EVOLUÇÃO TEMPORAL
+            </div>
+
+            <h2 id="line-title">
+                Evolução dos alertas
+            </h2>
+
+        </div>
+
+
+        <div class="switch">
+
+            <button
+                class="period active"
+                data-period="mensal">
+
+                Mensal
+
+            </button>
+
+
+            <button
+                class="period"
+                data-period="anual">
+
+                Anual
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div id="linha">
+    </div>
+
+
+    <div
+        id="line-note"
+        class="note">
+    </div>
+
+</section>
+
+
+</section>
+
+
+<!-- ===================================================================== -->
+<!-- INFORMAÇÕES -->
+<!-- ===================================================================== -->
+
+<section
+id="tab-informacoes"
+class="tab-content">
+
+
+<article class="info-hero">
+
+    <div class="section-kicker info-light">
+        SOBRE OS DADOS
+    </div>
+
+    <h2>
+        Ferramentas de alertas de desastres
+    </h2>
+
+    <p>
+        Abaixo são apresentadas informações sobre o uso das ferramentas
+        de alertas de desastres, disponibilizadas pelas prestadoras de
+        telecomunicações aos órgãos de Defesa Civil e demais autoridades
+        competentes via coordenação da Anatel.
+    </p>
+
+</article>
+
+
+<section class="info-grid">
+
+
+    <article class="info-card">
+
+        <div class="info-letter">
+            A
+        </div>
+
+        <h3>
+            Telefonia móvel — SMS
+        </h3>
+
+        <p>
+            Notificações via mensagem de texto (SMS) aos consumidores
+            que realizaram o cadastro por meio do número
+            <strong>40199</strong>.
+        </p>
+
+    </article>
+
+
+    <article class="info-card">
+
+        <div class="info-letter">
+            B
+        </div>
+
+        <h3>
+            Defesa Civil Alerta — DCA
+        </h3>
+
+        <p>
+            Notificações via mensagem de texto no estilo
+            <em>pop-up</em>, enviadas pela tecnologia
+            <em>Cell Broadcast</em>.
+        </p>
+
+    </article>
+
+
+    <article class="info-card">
+
+        <div class="info-letter">
+            C
+        </div>
+
+        <h3>
+            TV por assinatura — TVA
+        </h3>
+
+        <p>
+            Notificações via <em>pop-up</em>,
+            com imagem sobreposta à tela.
+        </p>
+
+    </article>
+
+</section>
+
+
+<article class="warning">
+
+    <strong>
+        Importante
+    </strong>
+
+    <p>
+        Os números totais de alertas indicam o número total de
+        <strong>alertas enviados</strong>, não o número de usuários
+        que receberam estes alertas.
+    </p>
+
+</article>
+
+
+<section class="method-grid">
+
+
+    <article class="panel method-card">
+
+        <div class="section-kicker">
+            PERCENTUAL MUNICIPAL
+        </div>
+
+        <h3>
+            Participação do tipo
+        </h3>
+
+        <p>
+            A métrica percentual representa a participação do tipo
+            selecionado no total de alertas daquele município.
+        </p>
+
+        <code>
+            alertas do tipo ÷ total de alertas do município
+        </code>
+
+        <p>
+            Portanto, 1 de 1 e 23 de 23 correspondem igualmente a 100%.
+            O percentual mede composição, não volume.
+        </p>
+
+    </article>
+
+
+    <article class="panel method-card">
+
+        <div class="section-kicker">
+            COBERTURA DAS UFs
+        </div>
+
+        <h3>
+            Cobertura municipal
+        </h3>
+
+        <p>
+            Na visualização por UF, a cobertura corresponde a:
+        </p>
+
+        <code>
+            municípios abrangidos ÷ municípios da UF
+        </code>
+
+    </article>
+
+
+    <article class="panel method-card">
+
+        <div class="section-kicker">
+            CLASSIFICAÇÃO
+        </div>
+
+        <h3>
+            Quantis
+        </h3>
+
+        <p>
+            Os valores zero são mantidos em uma classe própria.
+            Os valores positivos são distribuídos em até cinco classes,
+            favorecendo a visualização da variação espacial.
+        </p>
+
+    </article>
+
+
+    <article class="panel method-card">
+
+        <div class="section-kicker">
+            COMPARAÇÃO TEMPORAL
+        </div>
+
+        <h3>
+            Escala fixa
+        </h3>
+
+        <p>
+            A escala fixa utiliza a mesma referência entre os anos,
+            sendo mais apropriada quando o objetivo é comparar
+            magnitude ao longo do tempo.
+        </p>
+
+    </article>
+
+
+    <article class="panel method-card">
+
+        <div class="section-kicker">
+            TERRITÓRIO
+        </div>
+
+        <h3>
+            Unidade municipal
+        </h3>
+
+        <code>
+            Ano + Forma + Código do Alerta + Município
+        </code>
+
+        <p>
+            Um alerta pode estar associado a vários municípios.
+        </p>
+
+    </article>
+
+
+    <article class="panel method-card">
+
+        <div class="section-kicker">
+            PERÍODO DO DIA
+        </div>
+
+        <h3>
+            Universo territorializado
+        </h3>
+
+        <p>
+            O indicador Período do Dia no panorama nacional utiliza
+            somente os alertas com geografia disponível.
+        </p>
+
+    </article>
+
+
+</section>
+
+
+<article class="panel source-panel">
+
+    <h3>
+        Fonte e cobertura
+    </h3>
+
+
+    <div class="source-row">
+
+        <span>
+            Fonte
+        </span>
+
+        <strong>
+            Agência Nacional de Telecomunicações — Anatel
+        </strong>
+
+    </div>
+
+
+    <div class="source-row">
+
+        <span>
+            Cobertura da base utilizada
+        </span>
+
+        <strong id="info-periodo">
+            —
+        </strong>
+
+    </div>
+
+
+    <div class="source-row">
+
+        <span>
+            Último período
+        </span>
+
+        <strong id="info-observacao">
+            —
+        </strong>
+
+    </div>
+
+
+    <div class="source-row">
+
+        <span>
+            Municípios na malha
+        </span>
+
+        <strong>
+            5.570
+        </strong>
+
+    </div>
+
+
+    <div class="source-row">
+
+        <span>
+            Municípios com registro na série
+        </span>
+
+        <strong>
+            4.577
+        </strong>
+
+    </div>
+
+</article>
+
+
+</section>
+
+
+</main>
+
+
+<footer>
+    Fonte: Agência Nacional de Telecomunicações — Anatel
+</footer>
+
+
+<script src="assets/app.js">
+</script>
+
+
+</body>
+</html>
