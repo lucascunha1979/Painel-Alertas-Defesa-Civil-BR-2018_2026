@@ -1,0 +1,2535 @@
+
+:root {
+
+    --bg:#f3f6f9;
+    --surface:#ffffff;
+    --text:#172435;
+    --muted:#6b7788;
+    --border:#dfe6ed;
+
+    --primary:#286b92;
+    --primary-dark:#174968;
+
+    --positive:#187049;
+    --negative:#b43d3d;
+
+    --accent:#d69342;
+}
+
+
+* {
+    box-sizing:border-box;
+}
+
+
+body {
+
+    margin:0;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+button,
+select,
+input {
+    font:inherit;
+}
+
+
+.header {
+
+    display:flex;
+
+    align-items:flex-end;
+
+    justify-content:space-between;
+
+    gap:24px;
+
+    padding:
+        24px
+        34px
+        20px;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            125deg,
+            #17415f,
+            #2e779d
+        );
+}
+
+
+.header h1 {
+
+    margin:
+        3px
+        0
+        5px;
+
+    font-size:29px;
+
+    line-height:1;
+}
+
+
+.header p {
+
+    margin:0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .80
+        );
+
+    font-size:12px;
+}
+
+
+.header-kicker {
+
+    font-size:9px;
+
+    font-weight:800;
+
+    letter-spacing:.12em;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .70
+        );
+}
+
+
+.period-badge {
+
+    padding:
+        7px
+        11px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .25
+        );
+
+    border-radius:20px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .10
+        );
+
+    font-size:11px;
+}
+
+
+.tabs {
+
+    display:flex;
+
+    padding:
+        0
+        34px;
+
+    background:white;
+
+    border-bottom:
+        1px solid
+        var(--border);
+}
+
+
+.tab {
+
+    padding:
+        13px
+        16px
+        11px;
+
+    border:0;
+
+    border-bottom:
+        3px solid transparent;
+
+    background:transparent;
+
+    color:var(--muted);
+
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+
+.tab.active {
+
+    color:var(--primary);
+
+    border-bottom-color:
+        var(--primary);
+}
+
+
+.container {
+
+    max-width:1680px;
+
+    margin:0 auto;
+
+    padding:
+        17px
+        24px
+        34px;
+}
+
+
+.tab-content {
+    display:none;
+}
+
+
+.tab-content.active {
+    display:block;
+}
+
+
+.panel {
+
+    background:white;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:12px;
+
+    box-shadow:
+        0
+        4px
+        14px
+        rgba(
+            25,
+            46,
+            67,
+            .045
+        );
+}
+
+
+.filters {
+
+    padding:
+        13px
+        14px
+        11px;
+
+    margin-bottom:
+        10px;
+}
+
+
+.filters-grid {
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(240px,2fr)
+        minmax(100px,.7fr)
+        minmax(115px,.75fr)
+        minmax(95px,.65fr)
+        minmax(210px,1.45fr)
+        minmax(110px,.8fr)
+        minmax(80px,.55fr);
+
+    gap:9px;
+}
+
+
+.control label {
+
+    display:block;
+
+    margin-bottom:4px;
+
+    color:var(--muted);
+
+    font-size:9px;
+
+    font-weight:800;
+
+    text-transform:uppercase;
+}
+
+
+.control select {
+
+    width:100%;
+
+    min-height:35px;
+
+    padding:
+        6px
+        8px;
+
+    border:
+        1px solid
+        #d2dce5;
+
+    border-radius:6px;
+
+    outline:none;
+
+    background:white;
+
+    color:var(--text);
+
+    font-size:11px;
+}
+
+
+.control select:disabled {
+
+    background:#f1f3f5;
+
+    color:#9ca4ad;
+}
+
+
+.animation-row {
+
+    display:grid;
+
+    grid-template-columns:
+        34px
+        auto
+        34px
+        minmax(230px,1fr)
+        55px;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding-top:9px;
+
+    margin-top:9px;
+
+    border-top:
+        1px solid
+        #edf0f3;
+}
+
+
+.animation-button,
+.play-button,
+.secondary-button {
+
+    border:
+        1px solid
+        #d1dae3;
+
+    border-radius:6px;
+
+    background:white;
+
+    cursor:pointer;
+}
+
+
+.animation-button {
+
+    width:34px;
+
+    height:31px;
+}
+
+
+.play-button {
+
+    min-width:104px;
+
+    height:31px;
+
+    padding:
+        0
+        10px;
+
+    border-color:
+        var(--primary);
+
+    background:
+        var(--primary);
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+
+#slider {
+    accent-color:var(--primary);
+}
+
+
+#slider-label {
+
+    color:var(--primary);
+
+    text-align:center;
+
+    font-size:12px;
+}
+
+
+.context-bar {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    min-height:28px;
+
+    padding:
+        0
+        2px;
+
+    margin-bottom:8px;
+
+    color:var(--muted);
+
+    font-size:11px;
+}
+
+
+.context-bar strong {
+    color:var(--text);
+}
+
+
+.secondary-button {
+
+    padding:
+        5px
+        9px;
+
+    font-size:10px;
+}
+
+
+.hidden {
+    display:none !important;
+}
+
+
+.cards {
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            6,
+            minmax(0,1fr)
+        );
+
+    gap:8px;
+
+    margin-bottom:11px;
+}
+
+
+.metric-card {
+
+    min-height:89px;
+
+    padding:
+        11px
+        12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-left:
+        3px solid
+        #638eaa;
+
+    border-radius:9px;
+
+    background:white;
+}
+
+
+.metric-label {
+
+    color:var(--muted);
+
+    font-size:8px;
+
+    font-weight:800;
+
+    letter-spacing:.03em;
+
+    text-transform:uppercase;
+}
+
+
+.metric-value {
+
+    margin-top:7px;
+
+    font-size:23px;
+
+    line-height:1;
+
+    font-weight:760;
+}
+
+
+.metric-text {
+
+    font-size:16px;
+
+    line-height:1.1;
+}
+
+
+.metric-sub {
+
+    margin-top:7px;
+
+    color:#828c98;
+
+    font-size:9px;
+}
+
+
+.positive {
+    color:var(--positive);
+}
+
+
+.negative {
+    color:var(--negative);
+}
+
+
+.main-grid {
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,2.35fr)
+        minmax(390px,.65fr);
+
+    gap:11px;
+
+    margin-bottom:11px;
+}
+
+
+.map-panel {
+
+    position:relative;
+
+    padding:
+        5px
+        8px
+        7px;
+}
+
+
+#mapa {
+
+    width:100%;
+
+    height:735px;
+}
+
+
+.map-loading,
+.profile-loading {
+
+    position:absolute;
+
+    z-index:30;
+
+    padding:
+        8px
+        11px;
+
+    border-radius:7px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .94
+        );
+
+    box-shadow:
+        0
+        3px
+        12px
+        rgba(
+            0,
+            0,
+            0,
+            .12
+        );
+
+    color:var(--primary);
+
+    font-size:10px;
+
+    font-weight:700;
+}
+
+
+.map-loading {
+
+    left:50%;
+
+    top:50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+}
+
+
+.sidebar {
+
+    position:relative;
+
+    height:767px;
+
+    overflow:hidden;
+
+    padding:
+        10px;
+}
+
+
+.sidebar-tabs {
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:4px;
+
+    padding:3px;
+
+    margin-bottom:7px;
+
+    border-radius:7px;
+
+    background:#f1f4f7;
+}
+
+
+.side-tab {
+
+    padding:
+        6px;
+
+    border:0;
+
+    border-radius:5px;
+
+    background:transparent;
+
+    color:var(--muted);
+
+    font-size:10px;
+
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+
+.side-tab.active {
+
+    background:white;
+
+    color:var(--primary);
+
+    box-shadow:
+        0
+        1px
+        4px
+        rgba(
+            0,
+            0,
+            0,
+            .08
+        );
+}
+
+
+.sidebar-heading {
+
+    min-height:35px;
+
+    padding:
+        0
+        3px;
+}
+
+
+.sidebar-heading h2 {
+
+    margin:
+        2px
+        0
+        4px;
+
+    font-size:16px;
+}
+
+
+.section-kicker {
+
+    color:#788596;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    letter-spacing:.08em;
+}
+
+
+.profile-scope,
+.ranking-subtitle {
+
+    color:#85909c;
+
+    font-size:8px;
+
+    line-height:1.35;
+}
+
+
+.profile-loading {
+
+    top:54px;
+
+    right:14px;
+}
+
+
+.donut-grid {
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap:
+        2px
+        4px;
+}
+
+
+.mini-chart-wrap {
+
+    min-width:0;
+
+    min-height:151px;
+}
+
+
+.mini-note {
+
+    margin:
+        -2px
+        4px
+        2px;
+
+    color:#8b949f;
+
+    font-size:7px;
+
+    line-height:1.25;
+}
+
+
+.profile-section {
+
+    border-top:
+        1px solid
+        #eef1f4;
+}
+
+
+.types-section {
+
+    padding-top:1px;
+}
+
+
+.ranking-container {
+
+    height:687px;
+
+    overflow-y:auto;
+
+    scrollbar-width:thin;
+}
+
+
+.ranking-table {
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    font-size:9px;
+}
+
+
+.ranking-table th {
+
+    position:sticky;
+
+    top:0;
+
+    z-index:4;
+
+    padding:
+        7px
+        4px;
+
+    background:#f6f8fa;
+
+    color:var(--muted);
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    text-align:right;
+}
+
+
+.ranking-table td {
+
+    padding:
+        6px
+        4px;
+
+    border-bottom:
+        1px solid
+        #edf0f3;
+
+    text-align:right;
+}
+
+
+.ranking-table th:nth-child(2),
+.ranking-table td:nth-child(2) {
+
+    text-align:left;
+}
+
+
+.ranking-table small {
+
+    display:block;
+
+    margin-top:1px;
+
+    color:#9aa3ad;
+
+    font-size:7px;
+}
+
+
+.ranking-row {
+    cursor:pointer;
+}
+
+
+.ranking-row:hover {
+    background:#f5f8fa;
+}
+
+
+.ranking-row.selected {
+    background:#e8f1f7;
+}
+
+
+.line-panel {
+
+    padding:
+        12px
+        14px;
+
+    margin-bottom:12px;
+}
+
+
+.line-header {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+}
+
+
+.line-header h2 {
+
+    margin:
+        2px
+        0
+        0;
+
+    font-size:15px;
+}
+
+
+.switch {
+
+    display:flex;
+
+    padding:2px;
+
+    border:
+        1px solid
+        #d6dee7;
+
+    border-radius:7px;
+
+    background:#f3f6f8;
+}
+
+
+.period {
+
+    padding:
+        5px
+        9px;
+
+    border:0;
+
+    border-radius:5px;
+
+    background:transparent;
+
+    color:var(--muted);
+
+    font-size:9px;
+
+    cursor:pointer;
+}
+
+
+.period.active {
+
+    background:white;
+
+    color:var(--primary);
+
+    font-weight:700;
+}
+
+
+#linha {
+    height:285px;
+}
+
+
+.note {
+
+    padding:
+        1px
+        5px
+        3px;
+
+    color:#7f8996;
+
+    font-size:9px;
+
+    line-height:1.4;
+}
+
+
+.info-hero {
+
+    margin-bottom:14px;
+
+    padding:23px;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            125deg,
+            #194a6c,
+            #347ea4
+        );
+
+    color:white;
+}
+
+
+.info-light {
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .70
+        );
+}
+
+
+.info-hero h2 {
+
+    margin:
+        4px
+        0
+        9px;
+}
+
+
+.info-hero p {
+
+    max-width:950px;
+
+    margin:0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            .88
+        );
+}
+
+
+.info-grid {
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap:12px;
+
+    margin-bottom:14px;
+}
+
+
+.info-card {
+
+    padding:18px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:11px;
+
+    background:white;
+}
+
+
+.info-letter {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:29px;
+
+    height:29px;
+
+    border-radius:50%;
+
+    background:#e7f0f6;
+
+    color:var(--primary);
+
+    font-weight:800;
+}
+
+
+.info-card h3 {
+
+    margin:
+        11px
+        0
+        7px;
+}
+
+
+.info-card p {
+
+    margin:0;
+
+    color:#606c79;
+
+    font-size:12px;
+}
+
+
+.warning {
+
+    padding:
+        14px
+        17px;
+
+    margin-bottom:14px;
+
+    border:
+        1px solid
+        #efd4aa;
+
+    border-left:
+        5px solid
+        var(--accent);
+
+    border-radius:9px;
+
+    background:#fff9ef;
+}
+
+
+.warning p {
+
+    margin:
+        4px
+        0
+        0;
+}
+
+
+.method-grid {
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+    gap:12px;
+
+    margin-bottom:14px;
+}
+
+
+.method-card {
+    padding:17px;
+}
+
+
+.method-card h3 {
+
+    margin:
+        4px
+        0
+        7px;
+}
+
+
+.method-card p {
+
+    color:#626e7b;
+
+    font-size:12px;
+}
+
+
+code {
+
+    display:inline-block;
+
+    padding:
+        6px
+        8px;
+
+    border-radius:5px;
+
+    background:#eef4f8;
+
+    color:#315c78;
+}
+
+
+.source-panel {
+    padding:18px;
+}
+
+
+.source-row {
+
+    display:grid;
+
+    grid-template-columns:
+        240px
+        1fr;
+
+    padding:
+        8px
+        0;
+
+    border-bottom:
+        1px solid
+        #edf0f3;
+
+    font-size:12px;
+}
+
+
+.source-row span {
+    color:var(--muted);
+}
+
+
+footer {
+
+    padding:18px;
+
+    color:#7d8792;
+
+    text-align:center;
+
+    font-size:9px;
+}
+
+
+.global-loading {
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:9999;
+
+    background:
+        rgba(
+            243,
+            246,
+            249,
+            .95
+        );
+
+    color:var(--primary);
+
+    font-weight:700;
+}
+
+
+@media(max-width:1250px) {
+
+    .filters-grid {
+
+        grid-template-columns:
+            repeat(
+                3,
+                1fr
+            );
+    }
+
+
+    .cards {
+
+        grid-template-columns:
+            repeat(
+                3,
+                1fr
+            );
+    }
+
+
+    .main-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .sidebar {
+
+        height:auto;
+    }
+}
+
+
+@media(max-width:700px) {
+
+    .filters-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .cards {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+
+    .info-grid,
+    .method-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .donut-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+
+/* ===== LAYOUT FINAL 3 COLUNAS ===== */
+
+
+/* ==========================================================================
+   DESKTOP GRANDE
+   PIZZAS | MAPA | BARRAS
+   ========================================================================== */
+
+@media (min-width: 1280px) {
+
+    .main-grid {
+
+        display: grid !important;
+
+        grid-template-columns:
+            320px
+            minmax(650px, 1fr)
+            360px !important;
+
+        gap: 12px !important;
+
+        align-items: stretch !important;
+
+        width: 100% !important;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       COLUNA ESQUERDA — PERFIL / DONUTS
+       ---------------------------------------------------------------------- */
+
+    .profile-left-panel {
+
+        display: block !important;
+
+        width: 320px !important;
+
+        min-width: 320px !important;
+
+        height: 767px !important;
+
+        padding:
+            12px
+            12px !important;
+
+        background:
+            #ffffff !important;
+
+        border:
+            1px solid
+            #dfe6ed !important;
+
+        border-radius:
+            12px !important;
+
+        box-shadow:
+            0
+            4px
+            14px
+            rgba(
+                25,
+                46,
+                67,
+                .045
+            ) !important;
+
+        overflow-y:
+            auto !important;
+
+        overflow-x:
+            hidden !important;
+
+        scrollbar-width:
+            thin;
+    }
+
+
+    .profile-left-title {
+
+        margin-bottom:
+            4px;
+
+        color:
+            #788596;
+
+        font-size:
+            9px;
+
+        font-weight:
+            800;
+
+        letter-spacing:
+            .08em;
+    }
+
+
+    .profile-left-subtitle {
+
+        margin-bottom:
+            6px;
+
+        color:
+            #85909c;
+
+        font-size:
+            9px;
+
+        line-height:
+            1.35;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       CABEÇALHO ORIGINAL DO PERFIL
+       AGORA FICA NA COLUNA ESQUERDA
+       ---------------------------------------------------------------------- */
+
+    .profile-left-panel > .sidebar-heading {
+
+        width:
+            100% !important;
+
+        min-height:
+            38px !important;
+
+        padding:
+            0
+            2px !important;
+
+        margin:
+            0
+            0
+            2px !important;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       DONUTS EMPILHADOS
+       ---------------------------------------------------------------------- */
+
+    .profile-left-panel .donut-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            1fr !important;
+
+        gap:
+            5px !important;
+
+        width:
+            100% !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+    }
+
+
+    .profile-left-panel .mini-chart-wrap {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        min-height:
+            165px !important;
+
+        height:
+            165px !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        overflow:
+            visible !important;
+
+        border-bottom:
+            1px solid
+            #edf0f3;
+    }
+
+
+    .profile-left-panel .mini-chart-wrap:last-child {
+
+        border-bottom:
+            0;
+    }
+
+
+    .profile-left-panel .mini-chart-wrap > div {
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    .profile-left-panel .js-plotly-plot,
+    .profile-left-panel .plot-container,
+    .profile-left-panel .svg-container {
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       AUMENTAR A LEITURA DAS LEGENDAS DOS DONUTS
+       ---------------------------------------------------------------------- */
+
+    .profile-left-panel .legendtext {
+
+        font-size:
+            10px !important;
+    }
+
+
+    .profile-left-panel .gtitle {
+
+        font-size:
+            13px !important;
+    }
+
+
+    #pie-periodo-note {
+
+        margin:
+            -5px
+            5px
+            4px !important;
+
+        padding:
+            0 !important;
+
+        text-align:
+            center !important;
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1.25 !important;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       COLUNA CENTRAL — MAPA
+       ---------------------------------------------------------------------- */
+
+    .map-panel {
+
+        grid-column:
+            2 !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            767px !important;
+
+        padding:
+            5px
+            8px
+            7px !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    #mapa {
+
+        width:
+            100% !important;
+
+        height:
+            735px !important;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       COLUNA DIREITA
+       AÇÃO NECESSÁRIA + TIPOS + RANKING
+       ---------------------------------------------------------------------- */
+
+    .profile-right-panel {
+
+        grid-column:
+            3 !important;
+
+        width:
+            360px !important;
+
+        min-width:
+            360px !important;
+
+        height:
+            767px !important;
+
+        padding:
+            10px
+            10px !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    /* Resetar os grids antigos do perfil */
+
+    .profile-right-panel #side-perfil {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        height:
+            auto !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+    }
+
+
+    .profile-right-panel #side-perfil > .profile-section {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        padding:
+            0 !important;
+
+        border-top:
+            1px solid
+            #edf0f3 !important;
+    }
+
+
+    .profile-right-panel #side-perfil > .profile-section:first-child {
+
+        border-top:
+            0 !important;
+    }
+
+
+    .profile-right-panel #side-perfil > .types-section {
+
+        margin-top:
+            7px !important;
+
+        padding-top:
+            7px !important;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       BARRAS
+       ---------------------------------------------------------------------- */
+
+    #bar-acao,
+    #bar-tipos {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+    }
+
+
+    #bar-acao .js-plotly-plot,
+    #bar-acao .plot-container,
+    #bar-acao .svg-container,
+
+    #bar-tipos .js-plotly-plot,
+    #bar-tipos .plot-container,
+    #bar-tipos .svg-container {
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    .profile-right-panel .legendtext {
+
+        font-size:
+            10px !important;
+    }
+
+
+    /* ----------------------------------------------------------------------
+       RANKING
+       ---------------------------------------------------------------------- */
+
+    .profile-right-panel .ranking-container {
+
+        height:
+            680px !important;
+
+        overflow-y:
+            auto !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   DESKTOP INTERMEDIÁRIO
+   Ainda mantém três colunas, mas um pouco menores
+   ========================================================================== */
+
+@media (min-width: 1100px) and (max-width: 1279px) {
+
+    .main-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            270px
+            minmax(540px, 1fr)
+            300px !important;
+
+        gap:
+            9px !important;
+    }
+
+
+    .profile-left-panel {
+
+        width:
+            270px !important;
+
+        min-width:
+            270px !important;
+
+        height:
+            740px !important;
+
+        overflow-y:
+            auto !important;
+    }
+
+
+    .map-panel {
+
+        width:
+            100% !important;
+
+        height:
+            740px !important;
+    }
+
+
+    #mapa {
+
+        height:
+            710px !important;
+    }
+
+
+    .profile-right-panel {
+
+        width:
+            300px !important;
+
+        min-width:
+            300px !important;
+
+        height:
+            740px !important;
+    }
+
+
+    .profile-left-panel .donut-grid {
+
+        grid-template-columns:
+            1fr !important;
+    }
+
+
+    .profile-left-panel .mini-chart-wrap {
+
+        min-height:
+            160px !important;
+
+        height:
+            160px !important;
+    }
+
+
+    .profile-left-panel .legendtext {
+
+        font-size:
+            9px !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   TELAS MENORES
+   Volta para uma coluna para não quebrar o painel
+   ========================================================================== */
+
+@media (max-width: 1099px) {
+
+    .main-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            1fr !important;
+
+        gap:
+            10px !important;
+    }
+
+
+    .profile-left-panel,
+    .map-panel,
+    .profile-right-panel {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            auto !important;
+    }
+
+
+    .profile-left-panel {
+
+        padding:
+            10px !important;
+    }
+
+
+    .profile-left-panel .donut-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap:
+            6px !important;
+    }
+
+
+    .profile-left-panel .mini-chart-wrap {
+
+        min-height:
+            175px !important;
+    }
+
+
+    #mapa {
+
+        height:
+            600px !important;
+    }
+
+
+    .profile-right-panel {
+
+        overflow:
+            visible !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   CELULAR
+   ========================================================================== */
+
+@media (max-width: 650px) {
+
+    .profile-left-panel .donut-grid {
+
+        grid-template-columns:
+            1fr !important;
+    }
+
+
+    #mapa {
+
+        height:
+            520px !important;
+    }
+
+}
+
+
+/* ===== FIM LAYOUT FINAL 3 COLUNAS ===== */
+
+
+
+/* ===== AJUSTE FINAL DE LARGURAS DOS QUADRANTES ===== */
+
+
+/* ==========================================================================
+   APROVEITAR A LARGURA REAL DA TELA
+   ========================================================================== */
+
+.container {
+
+    width:
+        calc(100% - 20px) !important;
+
+    max-width:
+        none !important;
+
+    margin-left:
+        auto !important;
+
+    margin-right:
+        auto !important;
+
+    padding-left:
+        10px !important;
+
+    padding-right:
+        10px !important;
+}
+
+
+/* ==========================================================================
+   MONITORES GRANDES
+   ========================================================================== */
+
+@media (min-width: 1600px) {
+
+
+    .main-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            370px
+            minmax(0, 1fr)
+            420px !important;
+
+        gap:
+            14px !important;
+
+        width:
+            100% !important;
+
+        align-items:
+            stretch !important;
+    }
+
+
+    .profile-left-panel {
+
+        width:
+            370px !important;
+
+        min-width:
+            370px !important;
+    }
+
+
+    .profile-right-panel {
+
+        width:
+            420px !important;
+
+        min-width:
+            420px !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   DESKTOP NORMAL
+   ========================================================================== */
+
+@media (min-width: 1350px) and (max-width: 1599px) {
+
+
+    .main-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            335px
+            minmax(0, 1fr)
+            385px !important;
+
+        gap:
+            12px !important;
+
+        width:
+            100% !important;
+
+        align-items:
+            stretch !important;
+    }
+
+
+    .profile-left-panel {
+
+        width:
+            335px !important;
+
+        min-width:
+            335px !important;
+    }
+
+
+    .profile-right-panel {
+
+        width:
+            385px !important;
+
+        min-width:
+            385px !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   DESKTOP MENOR
+   ========================================================================== */
+
+@media (min-width: 1100px) and (max-width: 1349px) {
+
+
+    .main-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            290px
+            minmax(0, 1fr)
+            330px !important;
+
+        gap:
+            9px !important;
+
+        width:
+            100% !important;
+    }
+
+
+    .profile-left-panel {
+
+        width:
+            290px !important;
+
+        min-width:
+            290px !important;
+    }
+
+
+    .profile-right-panel {
+
+        width:
+            330px !important;
+
+        min-width:
+            330px !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   MAPA — USAR TODO O QUADRANTE CENTRAL
+   ========================================================================== */
+
+@media (min-width: 1100px) {
+
+
+    .map-panel {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            770px !important;
+
+        padding:
+            5px
+            5px
+            7px !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    #mapa {
+
+        width:
+            100% !important;
+
+        height:
+            738px !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   PAINEL DE PIZZAS
+   ========================================================================== */
+
+@media (min-width: 1100px) {
+
+
+    .profile-left-panel {
+
+        height:
+            770px !important;
+
+        padding:
+            11px
+            14px !important;
+
+        overflow-x:
+            hidden !important;
+
+        overflow-y:
+            auto !important;
+    }
+
+
+    .profile-left-panel .donut-grid {
+
+        display:
+            grid !important;
+
+        grid-template-columns:
+            1fr !important;
+
+        gap:
+            2px !important;
+
+        width:
+            100% !important;
+    }
+
+
+    .profile-left-panel .mini-chart-wrap {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            164px !important;
+
+        min-height:
+            164px !important;
+
+        overflow:
+            visible !important;
+    }
+
+
+    .profile-left-panel .mini-chart-wrap > div,
+
+    .profile-left-panel .js-plotly-plot,
+
+    .profile-left-panel .plot-container,
+
+    .profile-left-panel .svg-container {
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    /* Títulos dos donuts */
+
+    .profile-left-panel .gtitle {
+
+        font-size:
+            14px !important;
+
+        font-weight:
+            700 !important;
+    }
+
+
+    /* Legendas dos donuts */
+
+    .profile-left-panel .legendtext {
+
+        font-size:
+            10px !important;
+    }
+
+
+    /* Número central */
+
+    .profile-left-panel .annotation-text {
+
+        font-size:
+            12px !important;
+    }
+
+
+    #pie-periodo-note {
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1.25 !important;
+
+        margin-top:
+            -4px !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   PAINEL DIREITO — BARRAS / RANKING
+   ========================================================================== */
+
+@media (min-width: 1100px) {
+
+
+    .profile-right-panel {
+
+        height:
+            770px !important;
+
+        padding:
+            10px
+            12px !important;
+
+        overflow:
+            hidden !important;
+    }
+
+
+    .profile-right-panel #side-perfil {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+    }
+
+
+    .profile-right-panel #side-perfil > .profile-section {
+
+        display:
+            block !important;
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        margin:
+            0 !important;
+
+        padding-left:
+            0 !important;
+
+        padding-right:
+            0 !important;
+    }
+
+
+    #bar-acao,
+    #bar-tipos {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+    }
+
+
+    #bar-acao .js-plotly-plot,
+    #bar-acao .plot-container,
+    #bar-acao .svg-container,
+
+    #bar-tipos .js-plotly-plot,
+    #bar-tipos .plot-container,
+    #bar-tipos .svg-container {
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
+    }
+
+
+    /* Texto dos eixos */
+
+    .profile-right-panel .xtick text,
+    .profile-right-panel .ytick text {
+
+        font-size:
+            10px !important;
+    }
+
+
+    /* Títulos */
+
+    .profile-right-panel .gtitle {
+
+        font-size:
+            14px !important;
+
+        font-weight:
+            700 !important;
+    }
+
+
+    /* Observações */
+
+    .profile-right-panel .mini-note {
+
+        font-size:
+            8px !important;
+
+        line-height:
+            1.3 !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   RANKING
+   ========================================================================== */
+
+@media (min-width: 1100px) {
+
+
+    .profile-right-panel .ranking-container {
+
+        width:
+            100% !important;
+
+        height:
+            680px !important;
+
+        overflow-y:
+            auto !important;
+    }
+
+
+    .profile-right-panel .ranking-table {
+
+        font-size:
+            10px !important;
+    }
+
+
+    .profile-right-panel .ranking-table th,
+
+    .profile-right-panel .ranking-table td {
+
+        padding:
+            7px
+            5px !important;
+    }
+
+}
+
+
+/* ==========================================================================
+   TELAS MENORES
+   ========================================================================== */
+
+@media (max-width: 1099px) {
+
+
+    .container {
+
+        width:
+            calc(100% - 12px) !important;
+
+        padding-left:
+            6px !important;
+
+        padding-right:
+            6px !important;
+    }
+
+
+    .main-grid {
+
+        grid-template-columns:
+            1fr !important;
+    }
+
+
+    .profile-left-panel,
+    .map-panel,
+    .profile-right-panel {
+
+        width:
+            100% !important;
+
+        min-width:
+            0 !important;
+
+        height:
+            auto !important;
+    }
+
+}
+
+
+/* ===== FIM AJUSTE FINAL DE LARGURAS ===== */
+
