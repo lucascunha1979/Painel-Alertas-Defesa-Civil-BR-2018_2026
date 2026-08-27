@@ -2449,7 +2449,22 @@ function updateMap() {
         {
 
             responsive:true,
-            displaylogo:false
+            displaylogo:false,
+
+            /* --------------------------------------------------------
+               LAYOUT FIX (2026-08): mapas geográficos no Plotly vêm,
+               por padrão, com zoom pelo scroll do mouse ativado. Como
+               o mapa fica no meio da página, ao rolar a tela com o
+               cursor em cima dele o usuário não rolava a página — o
+               mapa dava zoom, e a área visível ficava cortada pela
+               caixa de tamanho fixo do painel (o "corta quando eu
+               aumento" relatado). Desligar o scrollZoom resolve isso
+               sem tirar a possibilidade de usar os botões de zoom da
+               barra de ferramentas do próprio gráfico.
+               -------------------------------------------------------- */
+
+            scrollZoom:
+                false
         }
 
     ).then(
@@ -3840,6 +3855,32 @@ function donut(
             0
         );
 
+    /* ------------------------------------------------------------------
+       LAYOUT FIX (2026-08): o número central era cortado pelo anel em
+       totais com mais dígitos, porque o tamanho da fonte era fixo.
+       Aqui o tamanho se adapta ao comprimento do texto formatado, para
+       nunca ultrapassar o furo do donut — sem alterar o valor exibido.
+       ------------------------------------------------------------------ */
+
+    const totalLabel =
+        fmtInt.format(
+            total
+        );
+
+    let numberFontSize = 13;
+
+    if (totalLabel.length >= 6) {
+        numberFontSize = 11;
+    }
+
+    if (totalLabel.length >= 8) {
+        numberFontSize = 9;
+    }
+
+    if (totalLabel.length >= 10) {
+        numberFontSize = 7;
+    }
+
 
     Plotly.react(
 
@@ -3864,17 +3905,17 @@ function donut(
                     ),
 
                 hole:
-                    .62,
+                    .64,
 
                 domain:{
 
                     x:[
-                        .08,
-                        .92
+                        .12,
+                        .88
                     ],
 
                     y:[
-                        .43,
+                        .04,
                         .98
                     ]
                 },
@@ -3908,62 +3949,43 @@ function donut(
 
                 l:4,
                 r:4,
-                t:30,
-                b:4
+                t:20,
+                b:2
             },
 
             height:
-                150,
+                120,
+
+            /* ----------------------------------------------------------
+               A legenda nativa do Plotly (linha única, horizontal) não
+               quebra linha: com poucos pixels de largura (coluna dupla
+               do sidebar) ela cortava palavras como "Extrema"/"Passada".
+               Ela é substituída por uma legenda HTML própria (função
+               renderMiniLegend), que quebra linha livremente e nunca
+               corta texto.
+               ---------------------------------------------------------- */
 
             showlegend:
-                true,
-
-            legend:{
-
-                orientation:
-                    "h",
-
-                x:
-                    .5,
-
-                xanchor:
-                    "center",
-
-                y:
-                    .02,
-
-                yanchor:
-                    "bottom",
-
-                font:{
-
-                    size:
-                        7
-                },
-
-                traceorder:
-                    "normal"
-            },
+                false,
 
             annotations:[
                 {
 
                     text:
-                        fmtInt.format(
-                            total
-                        ),
+                        totalLabel,
 
                     x:
                         .5,
 
                     y:
-                        .70,
+                        .51,
 
                     showarrow:
                         false,
 
                     font:{
-                        size:12
+                        size:
+                            numberFontSize
                     }
                 }
             ],
@@ -3976,6 +3998,15 @@ function donut(
 
             responsive:true,
             displaylogo:false
+        }
+
+    ).then(
+        () => {
+
+            renderMiniLegend(
+                divId,
+                data
+            );
         }
     );
 
@@ -3994,6 +4025,192 @@ function donut(
 }
 
 
+/* ------------------------------------------------------------------------
+   Legenda HTML dos donuts — substitui a legenda nativa do Plotly.
+   As cores são lidas diretamente das fatias já desenhadas (mesma
+   paleta de sempre), garantindo que a bolinha da legenda bata
+   exatamente com a cor da fatia correspondente.
+   ------------------------------------------------------------------------ */
+
+function renderMiniLegend(
+    divId,
+    data
+) {
+
+    const chartEl =
+        document.getElementById(
+            divId
+        );
+
+    if (!chartEl) {
+        return;
+    }
+
+    const wrap =
+        chartEl.parentElement;
+
+    if (!wrap) {
+        return;
+    }
+
+    let legendEl =
+        wrap.querySelector(
+            ".mini-legend"
+        );
+
+    if (!legendEl) {
+
+        legendEl =
+            document.createElement(
+                "div"
+            );
+
+        legendEl.className =
+            "mini-legend";
+
+        wrap.appendChild(
+            legendEl
+        );
+    }
+
+    legendEl.textContent =
+        "";
+
+    const slices =
+        chartEl.querySelectorAll(
+            ".slice path.surface"
+        );
+
+    data.forEach(
+        (d, i) => {
+
+            const path =
+                slices[i];
+
+            const color =
+                path
+                ?
+                (
+                    path.style.fill
+                    ||
+                    getComputedStyle(
+                        path
+                    ).fill
+                )
+                :
+                "#ccc";
+
+            const item =
+                document.createElement(
+                    "span"
+                );
+
+            item.className =
+                "mini-legend-item";
+
+            const dot =
+                document.createElement(
+                    "span"
+                );
+
+            dot.className =
+                "mini-legend-dot";
+
+            dot.style.background =
+                color;
+
+            item.appendChild(
+                dot
+            );
+
+            item.appendChild(
+                document.createTextNode(
+                    d.name
+                )
+            );
+
+            legendEl.appendChild(
+                item
+            );
+        }
+    );
+}
+
+
+/* ----------------------------------------------------------------------
+   LAYOUT FIX (2026-08): rótulos longos (ex.: "TEMPESTADE LOCAL/
+   CONVECTIVA - CHUVAS INTENSAS") não cabem nem com margem automática
+   nas colunas mais estreitas do painel. Em vez de deixar o Plotly
+   cortar o texto, quebramos em várias linhas por palavra — o texto
+   completo continua sempre visível, só passa a ocupar mais linhas.
+   ---------------------------------------------------------------------- */
+
+function wrapLongLabel(
+    text,
+    maxLineLen=18
+) {
+
+    if (
+        text.length <= maxLineLen
+    ) {
+
+        return text;
+    }
+
+
+    const words =
+        text.split(
+            " "
+        );
+
+    const lines = [];
+
+    let current = "";
+
+    words.forEach(
+        w => {
+
+            const candidate =
+                current
+                ?
+                current + " " + w
+                :
+                w;
+
+            if (
+                candidate.length > maxLineLen
+                &&
+                current
+            ) {
+
+                lines.push(
+                    current
+                );
+
+                current = w;
+
+            } else {
+
+                current =
+                    candidate;
+            }
+        }
+    );
+
+    if (current) {
+
+        lines.push(
+            current
+        );
+    }
+
+
+    return lines.join(
+        "<br>"
+    );
+}
+
+
 function horizontalBars(
     divId,
     title,
@@ -4006,6 +4223,52 @@ function horizontalBars(
             ...data
         ]
         .reverse();
+
+    const wrappedLabels =
+        rev.map(
+            x =>
+                wrapLongLabel(
+                    x.name
+                )
+        );
+
+    /* ------------------------------------------------------------------
+       Como o Plotly divide a altura do gráfico igualmente entre todas
+       as categorias, uma única linha longa quebrada em várias linhas
+       exige que TODAS as linhas fiquem mais altas — senão o rótulo
+       maior invade a linha vizinha. Por isso a altura final garante
+       espaço para a pior linha (mais quebras) em todas as categorias,
+       em vez de somar um valor fixo por quebra.
+       ------------------------------------------------------------------ */
+
+    const maxLinesInAnyLabel =
+        Math.max(
+            1,
+            ...wrappedLabels.map(
+                label =>
+                    label.split(
+                        "<br>"
+                    ).length
+            )
+        );
+
+    const safeLineHeight =
+        15;
+
+    const neededPlotHeight =
+        maxLinesInAnyLabel
+        *
+        safeLineHeight
+        *
+        rev.length
+        +
+        50;
+
+    const finalHeight =
+        Math.max(
+            height,
+            neededPlotHeight
+        );
 
 
     Plotly.react(
@@ -4022,10 +4285,7 @@ function horizontalBars(
                     "h",
 
                 y:
-                    rev.map(
-                        x =>
-                            x.name
-                    ),
+                    wrappedLabels,
 
                 x:
                     rev.map(
@@ -4060,7 +4320,8 @@ function horizontalBars(
                 b:20
             },
 
-            height,
+            height:
+                finalHeight,
 
             paper_bgcolor:
                 "white",
@@ -4077,11 +4338,22 @@ function horizontalBars(
                     "rgba(100,110,120,.10)"
             },
 
+            /* ----------------------------------------------------------
+               LAYOUT FIX (2026-08): com margem esquerda fixa, rótulos
+               longos (ex.: "PREVENTIVA - CHUVAS INTENSAS") eram cortados
+               à esquerda. automargin faz o Plotly calcular o espaço
+               necessário para caber o rótulo inteiro, sem cortar texto
+               e sem mudar a posição do gráfico no layout.
+               ---------------------------------------------------------- */
+
             yaxis:{
 
                 tickfont:{
                     size:8
-                }
+                },
+
+                automargin:
+                    true
             }
         },
 
