@@ -2449,22 +2449,17 @@ function updateMap() {
         {
 
             responsive:true,
-            displaylogo:false,
+            displaylogo:false
 
-            /* --------------------------------------------------------
-               LAYOUT FIX (2026-08): mapas geográficos no Plotly vêm,
-               por padrão, com zoom pelo scroll do mouse ativado. Como
-               o mapa fica no meio da página, ao rolar a tela com o
-               cursor em cima dele o usuário não rolava a página — o
-               mapa dava zoom, e a área visível ficava cortada pela
-               caixa de tamanho fixo do painel (o "corta quando eu
-               aumento" relatado). Desligar o scrollZoom resolve isso
-               sem tirar a possibilidade de usar os botões de zoom da
-               barra de ferramentas do próprio gráfico.
-               -------------------------------------------------------- */
-
-            scrollZoom:
-                false
+            /* LAYOUT FIX (2026-08, revisado): a primeira versão desta
+               correção desligava "scrollZoom" por completo. Isso
+               resolvia o corte ao rolar a página com o mouse, mas
+               também tirava o zoom por pinça no celular/trackpad, que
+               usa a mesma opção internamente no Plotly. A versão atual
+               mantém o comportamento original do Plotly (zoom por
+               scroll/pinça continua disponível) e, em vez disso, trata
+               só o conflito específico com a rolagem da página — ver
+               o listener de "wheel" logo abaixo. */
         }
 
     ).then(
@@ -2472,6 +2467,71 @@ function updateMap() {
 
             const gd =
                 $("mapa");
+
+
+            /* ----------------------------------------------------------
+               LAYOUT FIX (2026-08): por padrão, ao rolar a página com o
+               cursor sobre o mapa, o Plotly interpreta isso como "dar
+               zoom no mapa" em vez de deixar a página rolar — e como o
+               mapa fica numa caixa de tamanho fixo, o resultado do zoom
+               ficava cortado (o "corta quando eu aumento" relatado).
+               A correção segue a mesma convenção usada em Google Maps
+               e ferramentas parecidas: rolar normalmente MOVE A PÁGINA;
+               segurando Ctrl (ou Cmd, no Mac) e rolando, aí sim dá zoom
+               no mapa. Isso é tratado ANTES do Plotly ver o evento
+               (fase de captura, num elemento acima do mapa), então o
+               zoom por pinça no celular e os botões +/- da barra de
+               ferramentas continuam funcionando normalmente — só o
+               scroll comum do mouse/trackpad, sem Ctrl, é que passa a
+               rolar a página em vez de dar zoom.
+               ---------------------------------------------------------- */
+
+            const mapPanelEl =
+                gd.closest(
+                    ".map-panel"
+                );
+
+            if (
+                mapPanelEl
+                &&
+                !mapPanelEl._wheelZoomGuard
+            ) {
+
+                mapPanelEl._wheelZoomGuard =
+                    true;
+
+                mapPanelEl.addEventListener(
+                    "wheel",
+                    evt => {
+
+                        if (
+                            !evt.ctrlKey
+                            &&
+                            !evt.metaKey
+                        ) {
+
+                            /* sem Ctrl/Cmd: deixa a página rolar
+                               normalmente, sem passar o evento
+                               adiante para o Plotly dar zoom. */
+
+                            evt.stopPropagation();
+
+                        } else {
+
+                            /* com Ctrl/Cmd: é o gesto de zoom.
+                               Bloqueia o zoom da PÁGINA do navegador
+                               (padrão do Ctrl+scroll) para que só o
+                               mapa dê zoom, como o usuário espera. */
+
+                            evt.preventDefault();
+                        }
+                    },
+                    {
+                        capture:
+                            true
+                    }
+                );
+            }
 
 
             if (

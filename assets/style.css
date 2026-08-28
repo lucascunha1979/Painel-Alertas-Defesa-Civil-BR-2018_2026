@@ -790,11 +790,11 @@ input {
     flex-wrap:wrap;
 
     gap:
-        2px
-        7px;
+        3px
+        9px;
 
     margin:
-        0
+        2px
         4px
         2px;
 }
@@ -806,11 +806,11 @@ input {
 
     align-items:center;
 
-    gap:3px;
+    gap:4px;
 
     color:var(--muted);
 
-    font-size:7px;
+    font-size:9px;
 
     font-weight:600;
 
@@ -822,9 +822,9 @@ input {
 
 .mini-legend-dot {
 
-    width:6px;
+    width:8px;
 
-    height:6px;
+    height:8px;
 
     border-radius:2px;
 
