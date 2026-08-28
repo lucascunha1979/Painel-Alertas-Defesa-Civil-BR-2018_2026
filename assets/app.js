@@ -4198,20 +4198,84 @@ function renderMiniLegend(
 
 
 /* ----------------------------------------------------------------------
-   LAYOUT FIX (2026-08): rótulos longos (ex.: "TEMPESTADE LOCAL/
-   CONVECTIVA - CHUVAS INTENSAS") não cabem nem com margem automática
-   nas colunas mais estreitas do painel. Em vez de deixar o Plotly
-   cortar o texto, quebramos em várias linhas por palavra — o texto
-   completo continua sempre visível, só passa a ocupar mais linhas.
+   LAYOUT FIX (2026-08, v3): a v2 quebrava rótulos longos contando
+   CARACTERES (até 18 por linha). Isso ainda cortava 1 letra em casos
+   de borda (ex.: "LOCAL/CONVECTIVA -" tem 18 caracteres, mas em telas
+   onde o CSS aumenta a fonte do eixo para 10px — ver
+   ".profile-right-panel .ytick text" em style.css — 18 caracteres já
+   não cabem mais nos ~105px de margem, e a primeira letra ("L") saía
+   cortada).
+
+   Esta versão mede a largura REAL do texto em pixels (com um canvas,
+   na mesma fonte que o Plotly vai usar) em vez de contar caracteres.
+   Isso elimina o "chute": a quebra de linha passa a ser exata, e a
+   margem do gráfico é calculada a partir da linha mais larga que de
+   fato existe, então nunca fica pequena demais.
    ---------------------------------------------------------------------- */
 
-function wrapLongLabel(
+function measureTextWidth(
     text,
-    maxLineLen=18
+    font
 ) {
 
     if (
-        text.length <= maxLineLen
+        !measureTextWidth._ctx
+    ) {
+
+        measureTextWidth._ctx =
+            document.createElement(
+                "canvas"
+            ).getContext(
+                "2d"
+            );
+    }
+
+    measureTextWidth._ctx.font =
+        font;
+
+    return measureTextWidth._ctx.measureText(
+        text
+    ).width;
+}
+
+
+function tickFont() {
+
+    /* A partir de 1100px de largura, o CSS aumenta a fonte dos eixos
+       para 10px (".profile-right-panel .ytick text"); abaixo disso,
+       continua no tamanho definido no próprio gráfico (8px). A medição
+       usa a mesma fonte que vai aparecer na tela. */
+
+    const size =
+        window.innerWidth >= 1100
+        ?
+        10
+        :
+        8;
+
+    return (
+        size
+        +
+        `px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif`
+    );
+}
+
+
+function wrapLongLabel(
+    text,
+    maxWidthPx
+) {
+
+    const font =
+        tickFont();
+
+    if (
+        measureTextWidth(
+            text,
+            font
+        )
+        <=
+        maxWidthPx
     ) {
 
         return text;
@@ -4238,7 +4302,12 @@ function wrapLongLabel(
                 w;
 
             if (
-                candidate.length > maxLineLen
+                measureTextWidth(
+                    candidate,
+                    font
+                )
+                >
+                maxWidthPx
                 &&
                 current
             ) {
@@ -4284,11 +4353,15 @@ function horizontalBars(
         ]
         .reverse();
 
+    const maxLabelWidthPx =
+        95;
+
     const wrappedLabels =
         rev.map(
             x =>
                 wrapLongLabel(
-                    x.name
+                    x.name,
+                    maxLabelWidthPx
                 )
         );
 
@@ -4328,6 +4401,47 @@ function horizontalBars(
         Math.max(
             height,
             neededPlotHeight
+        );
+
+    /* ------------------------------------------------------------------
+       Margem esquerda calculada a partir da linha mais larga que de
+       fato existe (medida em pixels reais, mesma fonte do gráfico),
+       em vez de um valor fixo (105px) que não se ajustava ao conteúdo.
+       automargin (abaixo) fica como reforço de segurança, mas o valor
+       de partida já é suficiente na grande maioria dos casos.
+       ------------------------------------------------------------------ */
+
+    const tickFontStr =
+        tickFont();
+
+    const widestLinePx =
+        Math.max(
+            0,
+            ...wrappedLabels.flatMap(
+                label =>
+                    label.split(
+                        "<br>"
+                    ).map(
+                        line =>
+                            measureTextWidth(
+                                line,
+                                tickFontStr
+                            )
+                    )
+            )
+        );
+
+    const marginLeft =
+        Math.min(
+            160,
+            Math.max(
+                60,
+                Math.ceil(
+                    widestLinePx
+                )
+                +
+                14
+            )
         );
 
 
@@ -4374,7 +4488,7 @@ function horizontalBars(
 
             margin:{
 
-                l:105,
+                l:marginLeft,
                 r:10,
                 t:30,
                 b:20
