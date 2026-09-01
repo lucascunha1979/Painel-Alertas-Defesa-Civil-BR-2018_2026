@@ -2031,6 +2031,215 @@ function fixedMax() {
 }
 
 
+/* ----------------------------------------------------------------------
+   LAYOUT FIX (2026-09, v4): o mapa aparecia pequeno, cercado de espaço
+   em branco, em qualquer largura de tela. Causa raiz encontrada: o
+   município de Vitória (ES, COD_IBGE 3205309) tem, na geometria oficial,
+   um polígono que inclui a Ilha da Trindade (~-28,85° de longitude, a
+   ~1.140km da costa) — território real de Vitória, mas geograficamente
+   um ponto isolado bem a leste do restante do país (o extremo leste do
+   continente fica em ~-34,79°). O enquadramento automático do Plotly
+   (`fitbounds:"locations"`) inclui esse ponto no cálculo da área
+   visível, forçando o mapa inteiro a dar zoom out para caber essa
+   ilha — e é isso que faz o Brasil continental aparecer pequeno.
+
+   A correção NÃO remove a Ilha da Trindade do mapa, dos dados, do
+   hover ou de qualquer lugar visível — ela continua lá normalmente.
+   Apenas o CÁLCULO DO ENQUADRAMENTO (zoom/center) passa a ignorar
+   coordenadas a leste de -33° (a real ponta leste do continente é
+   -34,79°, então -33° dá uma margem segura de ~1,8° / ~200km sem
+   arriscar cortar nenhum território continental) ao decidir qual área
+   mostrar. O enquadramento continua sendo recalculado a cada filtro/
+   clique territorial (Brasil, UF, ou município), preservando o zoom
+   dinâmico ao clicar num estado ou município — só que agora sempre
+   ignorando esse tipo de ilha isolada no cálculo da área visível.
+
+   Se por algum motivo o cálculo não encontrar nenhuma coordenada
+   válida (ex.: geojson ainda não carregado), a função devolve null e
+   o código volta a usar o comportamento padrão do Plotly
+   (`fitbounds:"locations"`) como rede de segurança.
+   ---------------------------------------------------------------------- */
+
+function computeMainlandGeoBounds(
+    trace
+) {
+
+    const LON_CUTOFF_LESTE =
+        -33;
+
+    const PADDING_FRACTION =
+        .04;
+
+
+    if (
+        !trace
+        ||
+        !trace.geojson
+        ||
+        !trace.geojson.features
+        ||
+        !trace.featureidkey
+        ||
+        !trace.locations
+        ||
+        !trace.locations.length
+    ) {
+
+        return null;
+    }
+
+
+    const keyPath =
+        trace.featureidkey
+        .replace(
+            "properties.",
+            ""
+        );
+
+    const wanted =
+        new Set(
+            trace.locations.map(
+                x =>
+                    String(x)
+            )
+        );
+
+
+    let minLon = Infinity;
+    let maxLon = -Infinity;
+    let minLat = Infinity;
+    let maxLat = -Infinity;
+
+
+    function scanCoords(
+        c
+    ) {
+
+        if (
+            typeof c[0] ===
+            "number"
+        ) {
+
+            const lon = c[0];
+            const lat = c[1];
+
+            if (
+                lon >
+                LON_CUTOFF_LESTE
+            ) {
+
+                /* ilha isolada a leste (ex.: Trindade) — ignorada
+                   só para o cálculo do enquadramento. */
+
+                return;
+            }
+
+            if (lon < minLon) minLon = lon;
+            if (lon > maxLon) maxLon = lon;
+            if (lat < minLat) minLat = lat;
+            if (lat > maxLat) maxLat = lat;
+
+        } else {
+
+            for (
+                let i = 0;
+                i < c.length;
+                i++
+            ) {
+
+                scanCoords(
+                    c[i]
+                );
+            }
+        }
+    }
+
+
+    trace.geojson.features.forEach(
+        feat => {
+
+            if (
+                !feat.properties
+                ||
+                !feat.geometry
+                ||
+                !feat.geometry.coordinates
+            ) {
+
+                return;
+            }
+
+            const key =
+                String(
+                    feat.properties[
+                        keyPath
+                    ]
+                );
+
+            if (
+                !wanted.has(
+                    key
+                )
+            ) {
+
+                return;
+            }
+
+            scanCoords(
+                feat.geometry.coordinates
+            );
+        }
+    );
+
+
+    if (
+        !isFinite(minLon)
+        ||
+        !isFinite(maxLon)
+        ||
+        !isFinite(minLat)
+        ||
+        !isFinite(maxLat)
+    ) {
+
+        return null;
+    }
+
+
+    const lonSpan =
+        Math.max(
+            maxLon - minLon,
+            .5
+        );
+
+    const latSpan =
+        Math.max(
+            maxLat - minLat,
+            .5
+        );
+
+    const lonPad =
+        lonSpan * PADDING_FRACTION;
+
+    const latPad =
+        latSpan * PADDING_FRACTION;
+
+
+    return {
+
+        lonRange:[
+            minLon - lonPad,
+            maxLon + lonPad
+        ],
+
+        latRange:[
+            minLat - latPad,
+            maxLat + latPad
+        ]
+    };
+}
+
+
 function updateMap() {
 
     const data =
@@ -2376,6 +2585,12 @@ function updateMap() {
         );
 
 
+    const mainlandBounds =
+        computeMainlandGeoBounds(
+            trace
+        );
+
+
     const layout = {
 
         title:{
@@ -2411,17 +2626,46 @@ function updateMap() {
             x:.02
         },
 
-        geo:{
+        geo:
+            mainlandBounds
+            ?
+            {
 
-            fitbounds:
-                "locations",
+                fitbounds:
+                    false,
 
-            visible:
-                false,
+                lonaxis:{
+                    range:
+                        mainlandBounds.lonRange
+                },
 
-            bgcolor:
-                "white"
-        },
+                lataxis:{
+                    range:
+                        mainlandBounds.latRange
+                },
+
+                visible:
+                    false,
+
+                bgcolor:
+                    "white"
+            }
+            :
+            {
+
+                /* rede de segurança: se o cálculo do enquadramento
+                   não encontrar coordenadas válidas, volta ao
+                   comportamento padrão do Plotly. */
+
+                fitbounds:
+                    "locations",
+
+                visible:
+                    false,
+
+                bgcolor:
+                    "white"
+            },
 
         margin:{
 
