@@ -2089,9 +2089,14 @@ footer {
         display:
             grid !important;
 
+        /* LAYOUT FIX (2026-09, v4): "minmax(0, 1fr)" não garantia
+           nenhuma largura mínima para a coluna do mapa — ela podia
+           encolher até quase zero. Restaurado um piso mínimo (testado
+           para não estourar a largura da tela nesta faixa). */
+
         grid-template-columns:
             370px
-            minmax(0, 1fr)
+            minmax(680px, 1fr)
             420px !important;
 
         gap:
@@ -2139,9 +2144,12 @@ footer {
         display:
             grid !important;
 
+        /* LAYOUT FIX (2026-09, v4): idem — piso mínimo restaurado
+           para a coluna do mapa nesta faixa de largura. */
+
         grid-template-columns:
             335px
-            minmax(0, 1fr)
+            minmax(520px, 1fr)
             385px !important;
 
         gap:
@@ -2189,9 +2197,13 @@ footer {
         display:
             grid !important;
 
+        /* LAYOUT FIX (2026-09, v4): idem — piso mínimo restaurado
+           para a coluna do mapa nesta faixa de largura (a mais
+           apertada das três, por isso o piso é menor). */
+
         grid-template-columns:
             290px
-            minmax(0, 1fr)
+            minmax(380px, 1fr)
             330px !important;
 
         gap:
